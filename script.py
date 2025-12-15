@@ -1,20 +1,17 @@
-# Simple DFA Minimization Tool
-# Uses partition refinement (easy to understand, no external libraries)
-
 from collections import defaultdict
 
 class DFA:
     def __init__(self, states, alphabet, transition, start_state, final_states):
         self.states = set(states)
         self.alphabet = set(alphabet)
-        self.transition = transition  # dict: (state, symbol) -> state
+        self.transition = transition  
         self.start_state = start_state
         self.final_states = set(final_states)
 
     def minimize(self):
-        # 1. Initial partition: final vs non-final states
+       
         P = [self.final_states, self.states - self.final_states]
-        P = [p for p in P if p]  # remove empty sets
+        P = [p for p in P if p]  
 
         changed = True
         while changed:
@@ -22,13 +19,11 @@ class DFA:
             new_P = []
 
             for group in P:
-                # split group based on transition behavior
                 blocks = defaultdict(set)
                 for state in group:
                     key = []
                     for symbol in self.alphabet:
                         next_state = self.transition.get((state, symbol))
-                        # find which partition next_state belongs to
                         for i, p in enumerate(P):
                             if next_state in p:
                                 key.append(i)
@@ -45,7 +40,7 @@ class DFA:
 
             P = new_P
 
-        # 2. Build new minimized DFA
+       
         state_map = {}
         for i, group in enumerate(P):
             for state in group:
@@ -73,7 +68,7 @@ class DFA:
 
 # ---------------- EXAMPLE USAGE ----------------
 
-# Define a DFA
+
 states = {0, 1, 2, 3}
 alphabet = {'a', 'b'}
 transition = {
@@ -92,3 +87,4 @@ dfa.display()
 min_dfa = dfa.minimize()
 print("\nMinimized DFA")
 min_dfa.display()
+
